@@ -6,7 +6,7 @@ import pandas as pd
 import locale
 
 EXCHANGE_TIME = 300
-
+LOCALE = 'uk_UA.utf8'
 
 def get_all_stations_list():
     return ['Akademmistechko', 'Arsenalna', 'Beresteiska', 'Boryspilska', 'Chernihivska', 'Chervonyi Khutir',
@@ -101,7 +101,7 @@ def get_all_times(origin_station):
 
 # Create your views here.
 def get_metrotimer(request):
-    locale.setlocale(locale.LC_ALL, 'Ukrainian_Ukraine.1252')
+    locale.setlocale(locale.LC_ALL, LOCALE)
     stations = get_all_stations_ukr()
     context = {
         'stationsUK': sorted(stations.values(), key=locale.strxfrm),
@@ -115,7 +115,7 @@ def post_metrotimer(request):
     origin_station = request.POST['station']
     times_en = get_all_times(origin_station)
     times_ua = dict()
-    locale.setlocale(locale.LC_ALL, 'Ukrainian_Ukraine.1252')
+    locale.setlocale(locale.LC_ALL, LOCALE)
     stations_ua = get_all_stations_ukr()
     for key in times_en:
         times_en[key] = str(int(times_en[key] / 60)) + '.' + str(times_en[key] % 60)
