@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metro timer</title>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+    <script src="{% static 'js/js.cookie.js' %}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row form-group">
+        {% if stationsEN %}
+            <select name="stationlist" id="selectstation" class="form-group">
+                {% for station in stationsEN %}
+                    <option value="{{ station }}">{{ station }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div id="result_ua" class="col-sm-6"></div>
+        <div id="result_en" class="col-sm-6"></div>
+    </div>
+</div>
+<script>
+    var selectDOM = document.getElementById('selectstation');
+
+    var response = "";
+    function load_times() {
+        var xhr = new XMLHttpRequest();
+        var csrftoken = Cookies.get('csrftoken');
+        xhr.open("POST", '{% url 'post_metrotimer' %}', true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+
+        xhr.onreadystatechange = function () {//Call a function when the state changes.
+            if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                console.log(xhr.response);
+                var response = JSON.parse(xhr.response);
+                var result_ua_DOM = document.getElementById('result_ua');
+                var result_en_DOM = document.getElementById('result_en');
+                result_ua_DOM.innerHTML = '';
+                result_en_DOM.innerHTML = '';
+                for (var key in response['times_ua']) {
+                    var stationDOM = document.createElement('tr');
+                    stationDOM.innerHTML = '<td>' + response['times_ua'][key][0] + '</td>' + '<td>' + response['times_ua'][key][1] + '</td>';
+                    result_ua_DOM.appendChild(stationDOM);
+                }
+                for (var key in response['times_en']) {
+                    var stationDOM = document.createElement('tr');
+                    stationDOM.innerHTML = '<td>' + response['times_en'][key][0] + '</td>' + '<td>' + response['times_en'][key][1] + '</td>';
+                    result_en_DOM.appendChild(stationDOM);
+                }
+            }
+        };
+        var selectedStation = selectDOM.options[selectDOM.selectedIndex].value;
+
+        xhr.send("station=" + selectedStation);
+    }
+
+    selectDOM.onchange = load_times;
+
+</script>
+
+</body>
+</html>
