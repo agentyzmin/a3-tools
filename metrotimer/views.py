@@ -7,9 +7,9 @@ import os
 import pandas as pd
 import locale
 
-EXCHANGE_TIME = 300
+EXCHANGE_TIME = 180
 # TODO: change to 'uk_UA.utf8' before deploying to heroku // local -> 'Ukrainian_Ukraine.1252'
-LOCALE = 'uk_UA.utf8'
+LOCALE = 'Ukrainian_Ukraine.1252'
 line_files = ['redline.csv', 'blueline.csv', 'greenline.csv']
 
 

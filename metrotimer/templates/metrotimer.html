@@ -36,7 +36,6 @@
     var rounding_switchDOM = document.getElementById('rounding_switch');
     var line_switchDOM = document.getElementById('line_switch');
 
-    var response = "";
     function load_times() {
         var xhr = new XMLHttpRequest();
         var csrftoken = Cookies.get('csrftoken');
@@ -56,15 +55,25 @@
 
                 for (var key in response['times_ua']) {
                     var stationDOM = document.createElement('tr');
-                    stationDOM.innerHTML = ((show_lines) ? '<td>' + response['times_ua'][key][1]['line'] + '</td>' : ' ') + '<td>' + response['times_ua'][key][0] + '</td>' + '<td>' + response['times_ua'][key][1]['time'] + '</td>';
+                    var time = response['times_ua'][key][1]['time'];
+                    if (rounding_switchDOM.checked){
+                        time = time.split('.')[0]
+                    }
+                    stationDOM.innerHTML = ((show_lines) ? '<td>' + response['times_ua'][key][1]['line'] + '</td>' : ' ')
+                        + '<td>' + response['times_ua'][key][0] + '</td>'
+                        + '<td>' + time + '</td>';
                     result_ua_DOM.appendChild(stationDOM);
                 }
                 for (var key in response['times_en']) {
                     var stationDOM = document.createElement('tr');
+                    var time = response['times_en'][key][1]['time'];
+                    if (rounding_switchDOM.checked){
+                        time = time.split('.')[0]
+                    }
                     stationDOM.innerHTML =
                         ((show_lines) ? '<td>' + response['times_en'][key][1]['line'] + '</td>' : ' ')
                         + '<td>' + response['times_en'][key][0] + '</td>'
-                        + '<td>' + response['times_en'][key][1]['time'] + '</td>';
+                        + '<td>' + time + '</td>';
                     result_en_DOM.appendChild(stationDOM);
                 }
             }
