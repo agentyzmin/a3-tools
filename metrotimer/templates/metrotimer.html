@@ -62,9 +62,14 @@
                     if (rounding_switchDOM.checked) {
                         time = time.split('.')[0]
                     }
-                    stationDOM.innerHTML = ((show_lines) ? '<td>(' + response['times_ua'][key][1]['line'] + ')</td>' : ' ')
-                        + '<td>' + response['times_ua'][key][0] + ((show_map)?'&nbsp&nbsp' + response['times_ua'][key][1]['map_square']:'') + '</td>'
-                        + '<td>' + time + '</td>';
+                    stationDOM.innerHTML += ((show_lines) ? '<td>(' + response['times_ua'][key][1]['line'] + ')</td>' : ' ')
+                    stationDOM.innerHTML += '<td>' + response['times_ua'][key][0] + ((show_map) ? '&nbsp&nbsp' + response['times_ua'][key][1]['map_square'] : '') + '</td>'
+                    if (time === "0" || time === '0.00') {
+                        stationDOM.innerHTML += '<td>Ви тут</td>'
+                    }
+                    else {
+                        stationDOM.innerHTML += '<td>' + time + ' хв</td>';
+                    }
                     result_ua_DOM.appendChild(stationDOM);
                 }
                 for (var key in response['times_en']) {
@@ -73,10 +78,14 @@
                     if (rounding_switchDOM.checked) {
                         time = time.split('.')[0]
                     }
-                    stationDOM.innerHTML =
-                        ((show_lines) ? '<td>' + response['times_en'][key][1]['line'] + '</td>' : ' ')
-                        + '<td>' + response['times_en'][key][0] + ((show_map)?('&nbsp&nbsp' + response['times_en'][key][1]['map_square']):'') + '</td>'
-                        + '<td>' + time + '</td>';
+                    stationDOM.innerHTML += ((show_lines) ? '<td>(' + response['times_en'][key][1]['line'] + ')</td>' : ' ')
+                    stationDOM.innerHTML += '<td>' + response['times_en'][key][0] + ((show_map) ? ('&nbsp&nbsp' + response['times_en'][key][1]['map_square']) : '') + '</td>'
+                    if (time === "0" || time === '0.00') {
+                        stationDOM.innerHTML += '<td>You\'re here</td>'
+                    }
+                    else {
+                        stationDOM.innerHTML += '<td>' + time + ' min</td>';
+                    }
                     result_en_DOM.appendChild(stationDOM);
                 }
             }

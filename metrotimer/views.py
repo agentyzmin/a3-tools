@@ -9,9 +9,27 @@ import locale
 
 EXCHANGE_TIME = 180
 # TODO: change to 'uk_UA.utf8' before deploying to heroku // local -> 'Ukrainian_Ukraine.1252'
-LOCALE = 'uk_UA.utf8'
+LOCALE = 'Ukrainian_Ukraine.1252'
 line_files = ['redline.csv', 'blueline.csv', 'greenline.csv']
-MAP_SQUARES = {'Akademmistechko': 'A1', 'Arsenalna': 'C2', 'Beresteiska': 'A2', 'Boryspilska': 'C3', 'Chernihivska': 'C2', 'Chervonyi Khutir': 'C3', 'Darnytsia': 'C2', 'Demiivska': 'B3', 'Dnipro': 'C2', 'Dorohozhychi': 'B1', 'Druzhby Narodiv': 'B3', 'Heroiv Dnipra': 'B1', 'Hidropark': 'C2', 'Holosiivska': 'B3', 'Ipodrom': 'A3', 'Kharkivska': 'C3', 'Khreschatyk': 'B2', 'Klovska': 'B2', 'Kontraktova Ploscha': 'B2', 'Lisova': 'C2', 'Livoberezhna': 'C2', 'Lukianivska': 'B2', 'Lybidska': 'B3', 'Maidan Nezalezhnosti': 'B2', 'Minska': 'B1', 'Nyvky': 'A1', 'Obolon': 'B1', 'Olimpiiska': 'B2', 'Osokorky': 'C3', 'Palats Sportu': 'B2', 'Palats Ukraina': 'B3', 'Pecherska': 'B3', 'Petrivka': 'B1', 'Ploscha Lva Tolstoho': 'B2', 'Politekhnichnyi Instytut': 'A2', 'Poshtova Ploscha': 'B2', 'Pozniaky': 'C3', 'Shuliavska': 'A2', 'Slavutych': 'B3', 'Sviatoshyn': 'A1', 'Syrets': 'B1', 'Tarasa Shevchenka': 'B1', 'Teatralna': 'B2', 'Teremky': 'A3', 'Universytet': 'B2', 'Vasylkivska': 'B3', 'Vokzalna': 'B2', 'Vydubychi': 'B3', 'Vyrlytsia': 'C3', 'Vystavkovyi Tsentr': 'B3', 'Zhytomyrska': 'A1', 'Zoloti vorota': 'B2'}
+MAP_SQUARES = {'Akademmistechko': 'A1', 'Arsenalna': 'C2', 'Beresteiska': 'A2', 'Boryspilska': 'C3',
+               'Chernihivska': 'C2', 'Chervonyi Khutir': 'C3', 'Darnytsia': 'C2', 'Demiivska': 'B3', 'Dnipro': 'C2',
+               'Dorohozhychi': 'B1', 'Druzhby Narodiv': 'B3', 'Heroiv Dnipra': 'B1', 'Hidropark': 'C2',
+               'Holosiivska': 'B3', 'Ipodrom': 'A3', 'Kharkivska': 'C3', 'Khreschatyk': 'B2', 'Klovska': 'B2',
+               'Kontraktova Ploscha': 'B2', 'Lisova': 'C2', 'Livoberezhna': 'C2', 'Lukianivska': 'B2', 'Lybidska': 'B3',
+               'Maidan Nezalezhnosti': 'B2', 'Minska': 'B1', 'Nyvky': 'A1', 'Obolon': 'B1', 'Olimpiiska': 'B2',
+               'Osokorky': 'C3', 'Palats Sportu': 'B2', 'Palats Ukraina': 'B3', 'Pecherska': 'B3', 'Petrivka': 'B1',
+               'Ploscha Lva Tolstoho': 'B2', 'Politekhnichnyi Instytut': 'A2', 'Poshtova Ploscha': 'B2',
+               'Pozniaky': 'C3', 'Shuliavska': 'A2', 'Slavutych': 'B3', 'Sviatoshyn': 'A1', 'Syrets': 'B1',
+               'Tarasa Shevchenka': 'B1', 'Teatralna': 'B2', 'Teremky': 'A3', 'Universytet': 'B2', 'Vasylkivska': 'B3',
+               'Vokzalna': 'B2', 'Vydubychi': 'B3', 'Vyrlytsia': 'C3', 'Vystavkovyi Tsentr': 'B3', 'Zhytomyrska': 'A1',
+               'Zoloti vorota': 'B2'}
+
+
+def set_ukr_locale():
+    try:
+        locale.setlocale(locale.LC_ALL, 'uk_UA.utf8')
+    except:
+        locale.setlocale(locale.LC_ALL, 'Ukrainian_Ukraine.1252')
 
 
 def get_all_stations_list():
@@ -121,7 +139,7 @@ def get_line_stations():
 
 # Create your views here.
 def get_metrotimer(request):
-    locale.setlocale(locale.LC_ALL, LOCALE)
+    set_ukr_locale()
     stations = get_all_stations_ukr()
     context = {
         'stationsUK': sorted(stations.values(), key=locale.strxfrm),
@@ -137,14 +155,14 @@ def post_metrotimer(request):
     origin_station = request.POST['station']
     times_en = get_all_times(origin_station)
     times_ua = dict()
-    locale.setlocale(locale.LC_ALL, LOCALE)
+    set_ukr_locale()
     stations_ua = get_all_stations_ukr()
     line_stations = get_line_stations()
     for key in times_en:
         if rounding:
             times_en[key] = (times_en[key] // 300 + (1 if times_en[key] % 300 > 0 else 0)) * 300
         times_en[key] = {
-            'time': str(int(times_en[key] / 60)) + '.' + format(times_en[key] % 60,'02d'),
+            'time': str(int(times_en[key] / 60)) + '.' + format(times_en[key] % 60, '02d'),
             'station': key,
             'line': line_stations[key],
             'map_square': MAP_SQUARES[key]
