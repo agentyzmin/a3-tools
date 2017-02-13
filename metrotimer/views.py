@@ -6,6 +6,7 @@ import pandas as pd
 import locale
 
 EXCHANGE_TIME = 300
+# TODO: change to 'uk_UA.utf8' before deploying to heroku // local -> 'Ukrainian_Ukraine.1252'
 LOCALE = 'uk_UA.utf8'
 
 def get_all_stations_list():
@@ -112,12 +113,16 @@ def get_metrotimer(request):
 
 @csrf_exempt
 def post_metrotimer(request):
+    rounding = bool(request.POST['rounding'])
+    print(rounding)
     origin_station = request.POST['station']
     times_en = get_all_times(origin_station)
     times_ua = dict()
     locale.setlocale(locale.LC_ALL, LOCALE)
     stations_ua = get_all_stations_ukr()
     for key in times_en:
+        if rounding:
+            times_en[key] = (times_en[key] // 300 + (1 if times_en[key] % 300 > 0 else 0)) * 300
         times_en[key] = str(int(times_en[key] / 60)) + '.' + str(times_en[key] % 60)
         times_ua[stations_ua[key]] = times_en[key]
     response = JsonResponse({'times_en': sorted(times_en.items()),

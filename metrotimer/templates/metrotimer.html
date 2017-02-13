@@ -9,22 +9,24 @@
 </head>
 <body>
 <div class="container">
-    <div class="row form-group">
+    <div class="container navbar-default navbar-brand navbar-fixed-top">
         {% if stationsEN %}
             <select name="stationlist" id="selectstation" class="form-group">
                 {% for station in stationsEN %}
                     <option value="{{ station }}">{{ station }}</option>
                 {% endfor %}
             </select>
+            <label class="h5"><input type="checkbox" id="rounding_switch"> Заокруглити вгору (до 5 хв.)</label>
         {% endif %}
     </div>
-    <div class="row">
+    <div class="row" style="padding-top: 50px">
         <div id="result_ua" class="col-sm-6"></div>
         <div id="result_en" class="col-sm-6"></div>
     </div>
 </div>
 <script>
     var selectDOM = document.getElementById('selectstation');
+    var rounding_switchDOM = document.getElementById('rounding_switch');
 
     var response = "";
     function load_times() {
@@ -55,11 +57,14 @@
             }
         };
         var selectedStation = selectDOM.options[selectDOM.selectedIndex].value;
+        var rounding = ''
+        if (rounding_switchDOM.checked) rounding='true';
 
-        xhr.send("station=" + selectedStation);
+        xhr.send("station=" + selectedStation + '&rounding='+rounding);
     }
 
     selectDOM.onchange = load_times;
+    rounding_switchDOM.onchange = load_times;
 
 </script>
 
