@@ -7,6 +7,59 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 EXCHANGE_TIME = 300
 line_files = ['blueline.csv', 'redline.csv', 'greenline.csv']
 
+map_squares = {'Академмістечко': 'A1',
+               'Арсенальна': 'C2',
+               'Берестейська': 'A2',
+               'Бориспільська': 'C3',
+               'Васильківська': 'B3',
+               'Видубичі': 'B3',
+               'Вирлиця': 'C3',
+               'Виставковий центр': 'B3',
+               'Вокзальна': 'B2',
+               'Героїв Дніпра': 'B1',
+               'Гідропарк': 'C2',
+               'Голосіївська': 'B3',
+               'Дарниця': 'C2',
+               'Деміївська': 'B3',
+               'Дніпро': 'C2',
+               'Дорогожичі': 'B1',
+               'Дружби народів': 'B3',
+               'Житомирська': 'A1',
+               'Золоті ворота': 'B2',
+               'Іподром': 'A3',
+               'Кловська': 'B2',
+               'Контрактова площа': 'B2',
+               'Либідська': 'B3',
+               'Лівобережна': 'C2',
+               'Лісова': 'C2',
+               'Лук\'янівська': 'B2',
+               'Майдан Незалежності': 'B2',
+               'Мінська': 'B1',
+               'Нивки': 'A1',
+               'Оболонь': 'B1',
+               'Олімпійська': 'B2',
+               'Осокорки': 'C3',
+               'Палац «Україна»': 'B3',
+               'Палац спорту': 'B2',
+               'Петрівка': 'B1',
+               'Печерська': 'B3',
+               'Площа Льва Толстого': 'B2',
+               'Позняки': 'C3',
+               'Політехнічний інститут': 'A2',
+               'Поштова площа': 'B2',
+               'Святошин': 'A1',
+               'Сирець': 'B1',
+               'Славутич': 'B3',
+               'Тараса Шевченка': 'B1',
+               'Театральна': 'B2',
+               'Теремки': 'A3',
+               'Університет': 'B2',
+               'Харківська': 'C3',
+               'Хрещатик': 'B2',
+               'Червоний хутір': 'C3',
+               'Чернігівська': 'C2',
+               'Шулявська': 'A2'}
+
 
 def get_all_stations_list():
     return ['Akademmistechko', 'Arsenalna', 'Beresteiska', 'Boryspilska', 'Chernihivska', 'Chervonyi Khutir',
@@ -29,7 +82,7 @@ def get_all_stations_ukr():
             'Livoberezhna': 'Лівобережна', 'Lukianivska': 'Лук\'янівська', 'Lybidska': 'Либідська',
             'Maidan Nezalezhnosti': 'Майдан Незалежності', 'Minska': 'Мінська', 'Nyvky': 'Нивки', 'Obolon': 'Оболонь',
             'Olimpiiska': 'Олімпійська', 'Osokorky': 'Осокорки', 'Palats Sportu': 'Палац спорту',
-            'Palats Ukraina': 'Палац Україна', 'Pecherska': 'Печерська', 'Petrivka': 'Петрівка',
+            'Palats Ukraina': 'Палац «Україна»', 'Pecherska': 'Печерська', 'Petrivka': 'Петрівка',
             'Ploscha Lva Tolstoho': 'Площа Льва Толстого', 'Politekhnichnyi Instytut': 'Політехнічний інститут',
             'Poshtova Ploscha': 'Поштова площа', 'Pozniaky': 'Позняки', 'Shuliavska': 'Шулявська',
             'Slavutych': 'Славутич', 'Sviatoshyn': 'Святошин', 'Syrets': 'Сирець',
@@ -98,6 +151,7 @@ def get_all_times(origin_station):
                         result[key] = total_time
     return result
 
+
 def get_line_stations():
     kyiv_lines = []
     module_dir = os.path.dirname(__file__)  # get current directory
@@ -114,3 +168,10 @@ def get_line_stations():
 
 
 print(get_line_stations())
+
+result = {}
+stations_dict = get_all_stations_ukr()
+for key in get_all_stations_ukr():
+    result[key] = map_squares[stations_dict[key]]
+
+print(result)

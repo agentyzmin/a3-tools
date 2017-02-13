@@ -11,6 +11,7 @@ EXCHANGE_TIME = 180
 # TODO: change to 'uk_UA.utf8' before deploying to heroku // local -> 'Ukrainian_Ukraine.1252'
 LOCALE = 'uk_UA.utf8'
 line_files = ['redline.csv', 'blueline.csv', 'greenline.csv']
+MAP_SQUARES = {'Akademmistechko': 'A1', 'Arsenalna': 'C2', 'Beresteiska': 'A2', 'Boryspilska': 'C3', 'Chernihivska': 'C2', 'Chervonyi Khutir': 'C3', 'Darnytsia': 'C2', 'Demiivska': 'B3', 'Dnipro': 'C2', 'Dorohozhychi': 'B1', 'Druzhby Narodiv': 'B3', 'Heroiv Dnipra': 'B1', 'Hidropark': 'C2', 'Holosiivska': 'B3', 'Ipodrom': 'A3', 'Kharkivska': 'C3', 'Khreschatyk': 'B2', 'Klovska': 'B2', 'Kontraktova Ploscha': 'B2', 'Lisova': 'C2', 'Livoberezhna': 'C2', 'Lukianivska': 'B2', 'Lybidska': 'B3', 'Maidan Nezalezhnosti': 'B2', 'Minska': 'B1', 'Nyvky': 'A1', 'Obolon': 'B1', 'Olimpiiska': 'B2', 'Osokorky': 'C3', 'Palats Sportu': 'B2', 'Palats Ukraina': 'B3', 'Pecherska': 'B3', 'Petrivka': 'B1', 'Ploscha Lva Tolstoho': 'B2', 'Politekhnichnyi Instytut': 'A2', 'Poshtova Ploscha': 'B2', 'Pozniaky': 'C3', 'Shuliavska': 'A2', 'Slavutych': 'B3', 'Sviatoshyn': 'A1', 'Syrets': 'B1', 'Tarasa Shevchenka': 'B1', 'Teatralna': 'B2', 'Teremky': 'A3', 'Universytet': 'B2', 'Vasylkivska': 'B3', 'Vokzalna': 'B2', 'Vydubychi': 'B3', 'Vyrlytsia': 'C3', 'Vystavkovyi Tsentr': 'B3', 'Zhytomyrska': 'A1', 'Zoloti vorota': 'B2'}
 
 
 def get_all_stations_list():
@@ -34,7 +35,7 @@ def get_all_stations_ukr():
             'Livoberezhna': 'Лівобережна', 'Lukianivska': 'Лук\'янівська', 'Lybidska': 'Либідська',
             'Maidan Nezalezhnosti': 'Майдан Незалежності', 'Minska': 'Мінська', 'Nyvky': 'Нивки', 'Obolon': 'Оболонь',
             'Olimpiiska': 'Олімпійська', 'Osokorky': 'Осокорки', 'Palats Sportu': 'Палац спорту',
-            'Palats Ukraina': 'Палац Україна', 'Pecherska': 'Печерська', 'Petrivka': 'Петрівка',
+            'Palats Ukraina': 'Палац «Україна»', 'Pecherska': 'Печерська', 'Petrivka': 'Петрівка',
             'Ploscha Lva Tolstoho': 'Площа Льва Толстого', 'Politekhnichnyi Instytut': 'Політехнічний інститут',
             'Poshtova Ploscha': 'Поштова площа', 'Pozniaky': 'Позняки', 'Shuliavska': 'Шулявська',
             'Slavutych': 'Славутич', 'Sviatoshyn': 'Святошин', 'Syrets': 'Сирець',
@@ -145,7 +146,8 @@ def post_metrotimer(request):
         times_en[key] = {
             'time': str(int(times_en[key] / 60)) + '.' + format(times_en[key] % 60,'02d'),
             'station': key,
-            'line': line_stations[key]
+            'line': line_stations[key],
+            'map_square': MAP_SQUARES[key]
         }
         times_ua[stations_ua[key]] = copy.copy(times_en[key])
         times_ua[stations_ua[key]]['station'] = stations_ua[key]
