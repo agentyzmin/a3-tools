@@ -1,3 +1,5 @@
+import copy
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -8,6 +10,8 @@ import locale
 EXCHANGE_TIME = 300
 # TODO: change to 'uk_UA.utf8' before deploying to heroku // local -> 'Ukrainian_Ukraine.1252'
 LOCALE = 'uk_UA.utf8'
+line_files = ['redline.csv', 'blueline.csv', 'greenline.csv']
+
 
 def get_all_stations_list():
     return ['Akademmistechko', 'Arsenalna', 'Beresteiska', 'Boryspilska', 'Chernihivska', 'Chervonyi Khutir',
@@ -61,7 +65,6 @@ def find_line(station, lines):
 
 
 def get_all_times(origin_station):
-    line_files = ['blueline.csv', 'redline.csv', 'greenline.csv']
     kyiv_lines = []
 
     exchange_stations = {
@@ -100,6 +103,21 @@ def get_all_times(origin_station):
     return result
 
 
+def get_line_stations():
+    kyiv_lines = []
+    module_dir = os.path.dirname(__file__)  # get current directory
+    for line_file in line_files:
+        file_path = os.path.join(module_dir, 'static/metrolines/' + line_file)
+        with open(file_path) as infile:
+            kyiv_lines.append(pd.read_csv(infile, dtype=object))
+
+    result = {}
+    for index, line in enumerate(kyiv_lines):
+        for station in list(line.columns)[1:]:
+            result[station] = 'M' + str(index + 1)
+    return result
+
+
 # Create your views here.
 def get_metrotimer(request):
     locale.setlocale(locale.LC_ALL, LOCALE)
@@ -120,11 +138,20 @@ def post_metrotimer(request):
     times_ua = dict()
     locale.setlocale(locale.LC_ALL, LOCALE)
     stations_ua = get_all_stations_ukr()
+    line_stations = get_line_stations()
     for key in times_en:
         if rounding:
             times_en[key] = (times_en[key] // 300 + (1 if times_en[key] % 300 > 0 else 0)) * 300
-        times_en[key] = str(int(times_en[key] / 60)) + '.' + str(times_en[key] % 60)
-        times_ua[stations_ua[key]] = times_en[key]
+        times_en[key] = {
+            'time': str(int(times_en[key] / 60)) + '.' + format(times_en[key] % 60,'02d'),
+            'station': key,
+            'line': line_stations[key]
+        }
+        times_ua[stations_ua[key]] = copy.copy(times_en[key])
+        times_ua[stations_ua[key]]['station'] = stations_ua[key]
+
+    print(sorted(times_en.items()))
+
     response = JsonResponse({'times_en': sorted(times_en.items()),
                              'times_ua': sorted(times_ua.items(), key=lambda x: locale.strxfrm(x[0]))})
 

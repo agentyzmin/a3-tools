@@ -8,6 +8,12 @@
     <script src="{% static 'js/js.cookie.js' %}"></script>
 </head>
 <body>
+<style>
+    td {
+        padding: 5px;
+    }
+</style>
+
 <div class="container">
     <div class="container navbar-default navbar-brand navbar-fixed-top">
         {% if stationsEN %}
@@ -17,6 +23,7 @@
                 {% endfor %}
             </select>
             <label class="h5"><input type="checkbox" id="rounding_switch"> Заокруглити вгору (до 5 хв.)</label>
+            <label class="h5"><input type="checkbox" id="line_switch"> Показати номери ліній</label>
         {% endif %}
     </div>
     <div class="row" style="padding-top: 50px">
@@ -27,6 +34,7 @@
 <script>
     var selectDOM = document.getElementById('selectstation');
     var rounding_switchDOM = document.getElementById('rounding_switch');
+    var line_switchDOM = document.getElementById('line_switch');
 
     var response = "";
     function load_times() {
@@ -38,33 +46,39 @@
 
         xhr.onreadystatechange = function () {//Call a function when the state changes.
             if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-                console.log(xhr.response);
+                //console.log(xhr.response);
                 var response = JSON.parse(xhr.response);
                 var result_ua_DOM = document.getElementById('result_ua');
                 var result_en_DOM = document.getElementById('result_en');
                 result_ua_DOM.innerHTML = '';
                 result_en_DOM.innerHTML = '';
+                show_lines = line_switchDOM.checked;
+
                 for (var key in response['times_ua']) {
                     var stationDOM = document.createElement('tr');
-                    stationDOM.innerHTML = '<td>' + response['times_ua'][key][0] + '</td>' + '<td>' + response['times_ua'][key][1] + '</td>';
+                    stationDOM.innerHTML = ((show_lines) ? '<td>' + response['times_ua'][key][1]['line'] + '</td>' : ' ') + '<td>' + response['times_ua'][key][0] + '</td>' + '<td>' + response['times_ua'][key][1]['time'] + '</td>';
                     result_ua_DOM.appendChild(stationDOM);
                 }
                 for (var key in response['times_en']) {
                     var stationDOM = document.createElement('tr');
-                    stationDOM.innerHTML = '<td>' + response['times_en'][key][0] + '</td>' + '<td>' + response['times_en'][key][1] + '</td>';
+                    stationDOM.innerHTML =
+                        ((show_lines) ? '<td>' + response['times_en'][key][1]['line'] + '</td>' : ' ')
+                        + '<td>' + response['times_en'][key][0] + '</td>'
+                        + '<td>' + response['times_en'][key][1]['time'] + '</td>';
                     result_en_DOM.appendChild(stationDOM);
                 }
             }
         };
         var selectedStation = selectDOM.options[selectDOM.selectedIndex].value;
-        var rounding = ''
-        if (rounding_switchDOM.checked) rounding='true';
+        var rounding = '';
+        if (rounding_switchDOM.checked) rounding = 'true';
 
-        xhr.send("station=" + selectedStation + '&rounding='+rounding);
+        xhr.send("station=" + selectedStation + '&rounding=' + rounding);
     }
 
     selectDOM.onchange = load_times;
     rounding_switchDOM.onchange = load_times;
+    line_switchDOM.onchange = load_times;
 
 </script>
 

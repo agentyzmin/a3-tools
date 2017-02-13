@@ -5,6 +5,7 @@ import pandas as pd
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
 EXCHANGE_TIME = 300
+line_files = ['blueline.csv', 'redline.csv', 'greenline.csv']
 
 
 def get_all_stations_list():
@@ -96,3 +97,20 @@ def get_all_times(origin_station):
                     if key not in result or result[key] > total_time:
                         result[key] = total_time
     return result
+
+def get_line_stations():
+    kyiv_lines = []
+    module_dir = os.path.dirname(__file__)  # get current directory
+    for line_file in line_files:
+        file_path = os.path.join(module_dir, 'static/metrolines/' + line_file)
+        with open(file_path) as infile:
+            kyiv_lines.append(pd.read_csv(infile, dtype=object))
+
+    result = {}
+    for index, line in enumerate(kyiv_lines):
+        for station in list(line.columns)[1:]:
+            result[station] = 'M' + str(index + 1)
+    return result
+
+
+print(get_line_stations())
