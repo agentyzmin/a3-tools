@@ -40,21 +40,18 @@
 
     function load_times() {
         var xhr = new XMLHttpRequest();
-        var csrftoken = Cookies.get('csrftoken');
         xhr.open("POST", '{% url 'post_metrotimer' %}', true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.setRequestHeader("X-CSRFToken", csrftoken);
 
         xhr.onreadystatechange = function () {//Call a function when the state changes.
             if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-                //console.log(xhr.response);
                 var response = JSON.parse(xhr.response);
                 var result_ua_DOM = document.getElementById('result_ua');
                 var result_en_DOM = document.getElementById('result_en');
                 result_ua_DOM.innerHTML = '';
                 result_en_DOM.innerHTML = '';
-                show_lines = line_switchDOM.checked;
-                show_map = map_switchDOM.checked;
+                var show_lines = line_switchDOM.checked;
+                var show_map = map_switchDOM.checked;
 
                 for (var key in response['times_ua']) {
                     var stationDOM = document.createElement('tr');
@@ -72,6 +69,7 @@
                     }
                     result_ua_DOM.appendChild(stationDOM);
                 }
+
                 for (var key in response['times_en']) {
                     var stationDOM = document.createElement('tr');
                     var time = response['times_en'][key][1]['time'];
@@ -90,10 +88,10 @@
                 }
             }
         };
+
         var selectedStation = selectDOM.options[selectDOM.selectedIndex].value;
         var rounding = '';
         if (rounding_switchDOM.checked) rounding = 'true';
-
         xhr.send("station=" + selectedStation + '&rounding=' + rounding);
     }
 
