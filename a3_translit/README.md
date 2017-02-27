@@ -1,1 +1,1 @@
-[Demo](https://dev.veikus.com/a3-translit)
+[Demo](https://agentyzmin.github.io/a3-tools/a3_translit/)
