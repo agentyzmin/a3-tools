@@ -89,7 +89,7 @@ jQuery(function ($) {
             .replace(/П/g, 'P')
             .replace(/Р/g, 'R')
             .replace(/С/g, 'S')
-            .replace(/Т/g, 'Y')
+            .replace(/Т/g, 'T')
             .replace(/У/g, 'U')
             .replace(/Ф/g, 'F')
             .replace(/Х/g, 'Kh')
