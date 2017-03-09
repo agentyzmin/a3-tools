@@ -1,10 +1,15 @@
 body, p, h1 {
-font-family: Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 h1 {
-font-size: 24px;
-margin-left: 10px;
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+p.text {
+    font-size: 13px;
+    margin-left: 10px;
 }
 
 textarea {
