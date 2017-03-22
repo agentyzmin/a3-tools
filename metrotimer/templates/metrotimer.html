@@ -22,21 +22,33 @@
                     <option value="{{ station }}">{{ station }}</option>
                 {% endfor %}
             </select>
-            <label class="h5"><input type="checkbox" id="rounding_switch" checked> Заокруглити вгору (до 5 хв.)</label>
-            <label class="h5"><input type="checkbox" id="line_switch" checked> Показати номери ліній</label>
-            <label class="h5"><input type="checkbox" id="map_switch" checked> Показати квадрат на мапі</label>
+            <label class="h5"><input type="checkbox" id="rounding_switch" checked> Заокруглення (до 5 хв.)</label>
+            <label class="h5"><input type="checkbox" id="line_switch" checked> Номери ліній</label>
+            <label class="h5"><input type="checkbox" id="map_switch" checked> Квадрат на мапі</label>
         {% endif %}
     </div>
     <div class="row" style="padding-top: 50px">
+        <div class="col-sm-6">
+            <button onclick="copyTextToClipboard(raw_text_ua)">Копіювати</button>
+        </div>
+        <div class="col-sm-6">
+            <button onclick="copyTextToClipboard(raw_text_en)">Copy</button>
+        </div>
+    </div>
+
+    <div class="row">
         <div id="result_ua" class="col-sm-6"></div>
         <div id="result_en" class="col-sm-6"></div>
     </div>
+
 </div>
 <script>
     var selectDOM = document.getElementById('selectstation');
     var rounding_switchDOM = document.getElementById('rounding_switch');
     var line_switchDOM = document.getElementById('line_switch');
     var map_switchDOM = document.getElementById('map_switch');
+    var raw_text_ua = '';
+    var raw_text_en = '';
 
     function load_times() {
         var xhr = new XMLHttpRequest();
@@ -60,12 +72,16 @@
                         time = time.split('.')[0]
                     }
                     stationDOM.innerHTML += ((show_lines) ? '<td>(' + response['times_ua'][key][1]['line'] + ')</td>' : ' ')
+                    raw_text_ua += ((show_lines) ? '(' + response['times_ua'][key][1]['line'] + ')\t' : '');
                     stationDOM.innerHTML += '<td>' + response['times_ua'][key][0] + ((show_map) ? '&nbsp&nbsp' + response['times_ua'][key][1]['map_square'] : '') + '</td>'
+                    raw_text_ua += response['times_ua'][key][0] + ((show_map) ? '  ' + response['times_ua'][key][1]['map_square'] : '') + '\t';
                     if (time === "0" || time === '0.00') {
                         stationDOM.innerHTML += '<td>Ви тут</td>'
+                        raw_text_ua += 'Ви тут\n'
                     }
                     else {
                         stationDOM.innerHTML += '<td>' + time + ' хв</td>';
+                        raw_text_ua += time + ' хв\n';
                     }
                     result_ua_DOM.appendChild(stationDOM);
                 }
@@ -77,12 +93,16 @@
                         time = time.split('.')[0]
                     }
                     stationDOM.innerHTML += ((show_lines) ? '<td>(' + response['times_en'][key][1]['line'] + ')</td>' : ' ')
+                    raw_text_en += ((show_lines) ? '(' + response['times_en'][key][1]['line'] + ')\t' : '')
                     stationDOM.innerHTML += '<td>' + response['times_en'][key][0] + ((show_map) ? ('&nbsp&nbsp' + response['times_en'][key][1]['map_square']) : '') + '</td>'
+                    raw_text_en += response['times_en'][key][0] + ((show_map) ? ('  ' + response['times_en'][key][1]['map_square']) : '') + '\t';
                     if (time === "0" || time === '0.00') {
                         stationDOM.innerHTML += '<td>You\'re here</td>'
+                        raw_text_en += 'You\'re here\n'
                     }
                     else {
                         stationDOM.innerHTML += '<td>' + time + ' min</td>';
+                        raw_text_en += time + ' min\n';
                     }
                     result_en_DOM.appendChild(stationDOM);
                 }
@@ -100,6 +120,64 @@
     line_switchDOM.onchange = load_times;
     map_switchDOM.onchange = load_times;
 
+    load_times();
+
+    function copyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+
+        //
+        // *** This styling is an extra step which is likely not required. ***
+        //
+        // Why is it here? To ensure:
+        // 1. the element is able to have focus and selection.
+        // 2. if element was to flash render it has minimal visual impact.
+        // 3. less flakyness with selection and copying which **might** occur if
+        //    the textarea element is not visible.
+        //
+        // The likelihood is the element won't even render, not even a flash,
+        // so some of these are just precautions. However in IE the element
+        // is visible whilst the popup box asking the user for permission for
+        // the web page to copy to the clipboard.
+        //
+
+        // Place in top-left corner of screen regardless of scroll position.
+        textArea.style.position = 'fixed';
+        textArea.style.top = 0;
+        textArea.style.left = 0;
+
+        // Ensure it has a small width and height. Setting to 1px / 1em
+        // doesn't work as this gives a negative w/h on some browsers.
+        textArea.style.width = '2em';
+        textArea.style.height = '2em';
+
+        // We don't need padding, reducing the size if it does flash render.
+        textArea.style.padding = 0;
+
+        // Clean up any borders.
+        textArea.style.border = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.boxShadow = 'none';
+
+        // Avoid flash of white box if rendered for any reason.
+        textArea.style.background = 'transparent';
+
+
+        textArea.value = text;
+
+        document.body.appendChild(textArea);
+
+        textArea.select();
+
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Copying text command was ' + msg);
+        } catch (err) {
+            console.log('Oops, unable to copy');
+        }
+
+        document.body.removeChild(textArea);
+    }
 </script>
 
 </body>
