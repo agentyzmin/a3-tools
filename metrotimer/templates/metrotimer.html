@@ -65,6 +65,9 @@
                 var show_lines = line_switchDOM.checked;
                 var show_map = map_switchDOM.checked;
 
+                raw_text_ua = '';
+                raw_text_en = '';
+
                 for (var key in response['times_ua']) {
                     var stationDOM = document.createElement('tr');
                     var time = response['times_ua'][key][1]['time'];
