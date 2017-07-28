@@ -102,7 +102,7 @@ jQuery(function ($) {
             .replace(/Ю/g, 'Iu')
             .replace(/(^|\s)Я/g, '$1Ya')
             .replace(/Я/g, 'Ia')
-            .replace(/'/g, '');
+            .replace(/'/g, '')
             .replace(/’/g, '');
     }
 });
