@@ -103,5 +103,6 @@ jQuery(function ($) {
             .replace(/(^|\s)Я/g, '$1Ya')
             .replace(/Я/g, 'Ia')
             .replace(/'/g, '');
+            .replace(/’/g, '');
     }
 });
