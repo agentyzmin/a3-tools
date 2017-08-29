@@ -26,6 +26,10 @@ jQuery(function ($) {
         return input
             .replace(/іє/g, 'ie') // Exception
             .replace(/Іє/g, 'Ie') // Exception
+            .replace(/ія/g, 'ia') // Exception
+            .replace(/Ія/g, 'Ia') // Exception
+            .replace(/зг/g, 'zgh') // Exception
+            .replace(/Зг/g, 'Zgh') // Exception
             .replace(/а/g, 'a')
             .replace(/б/g, 'b')
             .replace(/в/g, 'v')
