@@ -30,6 +30,7 @@ jQuery(function ($) {
             .replace(/Ія/g, 'Ia') // Exception
             .replace(/зг/g, 'zgh') // Exception
             .replace(/Зг/g, 'Zgh') // Exception
+            .replace(/ьо/g, 'io') // Exception
             .replace(/а/g, 'a')
             .replace(/б/g, 'b')
             .replace(/в/g, 'v')
