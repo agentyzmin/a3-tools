@@ -2,22 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>A3 Translit</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="jquery-2.1.4.min.js"></script>
+    <title>Географічна транслітерація — Агенти змін</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="app.js"></script>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-71269206-5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<style>
 
-  gtag('config', 'UA-71269206-5');
-</script>
+body, p, h1 {
+    font-family: 'proba_nav2', Helvetica, Arial, sans-serif;
+    margin: 20px;
+}
 
+h1 {
+    font-size: 32px;
+    margin-left: 10px;
+}
 
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.text {
+    font-size: 15px;
+    margin-left: 10px;
+    max-width: 600px;
+    line-height: 1.5;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    font-size: 15px;
+    line-height: 1.5;
+;
+}
+
+.row {
+    font-size: 0;
+}
+
+.col {
+    display: inline-block;
+
+    box-sizing: border-box;
+    padding: 0 10px;
+    width: 50%;
+
+    font-size: medium;
+}
+
+.footer{
+  font-size: 12px;
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  padding-bottom: 15px;
+}
+
+</style>
 </head>
 <body>
 
@@ -37,5 +80,17 @@
     </div>
 </div>
 
+<footer class="footer">
+
+          <span class="text-muted">Зробили <a href="http://a3.kyiv.ua">Агенти змін</a>.</span>
+          <span style="margin-left: 5px;">
+            <a href="http://a3.kyiv.ua/donate/">Підтримати</a> · 
+            <a href="https://facebook.com/agentyzmin">Facebook</a> · 
+            <a href="https://instagram.com/agentyzmin">Instagram</a> · 
+            <a href="https://www.youtube.com/channel/UCo99u1nJ7hkVvuWcGbL-pGQ">Youtube</a> · 
+            <a href="http://blog.a3.kyiv.ua">Блог</a>
+          </span>
+
+    </footer>
 </body>
 </html>
