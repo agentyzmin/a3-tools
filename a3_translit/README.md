@@ -6,7 +6,7 @@
 
 Зробили [Агенти змін](http://a3.kyiv.ua)
 
-## Скрипти 
-* [Adobe Illustrator](https%3A%2F%2Fagentyzmin.github.io%2Fa3-tools%2Fa3_translit%2Fscripts%2FA3%20Translit(AI).jsx) 
-* [Adobe InDesign] (https%3A%2F%2Fagentyzmin.github.io%2Fa3-tools%2Fa3_translit%2Fscripts%2FA3%20Translit(ID).jsx)
+## Додаткові скрипти 
+* [Adobe Illustrator](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(AI).jsx) 
+* [Adobe InDesign](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(ID).jsx)
 
