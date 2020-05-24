@@ -4,9 +4,8 @@
 
 [translit.a3.kyiv.ua](http://translit.a3.kyiv.ua) · [Demo on Github](https://agentyzmin.github.io/a3-tools/a3_translit/)
 
-Зробили [Агенти змін](http://a3.kyiv.ua)
 
 ## Додаткові скрипти 
-* [Adobe Illustrator](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(AI).jsx) 
-* [Adobe InDesign](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(ID).jsx)
+* [Adobe Illustrator](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(AI).jsx). Як [інсталювати скрипт](https://xinrongding.wordpress.com/2015/12/21/illustrator-cc-install-scripts-on-mac-os/).
+* [Adobe InDesign](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(ID).jsx). Як [інсталювати скрипт](https://indesignsecrets.com/how-to-install-scripts-in-indesign.php).
 
