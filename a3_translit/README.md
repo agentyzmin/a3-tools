@@ -13,11 +13,9 @@
 
 [Adobe Illustrator](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(AI).jsx) · [Adobe InDesign](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(ID).jsx)
 
-[https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3 Translit (ID).jsx](https://raw.githubusercontent.com/agentyzmin/a3-tools/master/a3_translit/scripts/A3%20Translit%20(ID).jsx)
 
 
-
-# **Як працює у Adobe Illustrator**
+## **Як працює у Adobe Illustrator**
 
 Обираєте текст, запускаєте скрипт. Працює з точковим текстом, текстовими фреймами, текстом на кривих.
 
@@ -25,7 +23,7 @@
 
 
 
-# **Як працює у Adobe InDesign**
+## **Як працює у Adobe InDesign**
 
 Обираєте текст, запускаєте скрипт. Нормально працює з текстовими фреймами, виділеним текстом, параграфами, комірками таблиці.
 
@@ -41,9 +39,9 @@
 
 
 
-# **Як інсталювати скрипти**
+## **Як інсталювати скрипти**
 
-## **Adobe Illustrator**
+### **Adobe Illustrator**
 
 Збережіть скрипт .jsx у папку:
 * для Mac OS: Applications\Adobe Illustrator 2020\Presets\en_GB\Scripts
@@ -52,14 +50,14 @@
 «2020» — версія встановленої програми.
 «en_GB» — код встановленої мови, тому файл якщо у вас Ілюстратор не англійською.
 
-## **Adobe InDesign**
+### **Adobe InDesign**
 
 Відкрийте панель скриптів Window > Utilities > Scripts, тоді клацніть правою кнопкою миші на папках Application чи User. Краще використати папку User для ваших скриптів (папка Application зробить доступними вскрити для всіх користувачів на цьому комп’ютері, але для цього потрібні права адміністратора). Щоб відкрити папку, у контектному меню оберіть Reveal in Finder (чи Reveal для Windows).
 
 ![Reveal in Finder](https://indesignsecrets.com/wp-content/uploads/2017/10/revealinfinder_new.jpeg)
 
 
-# **Офіційна транслітерація**
+## **Офіційна транслітерація**
 
 За тим же принципом тільки з використанням офіційної транслітерації українського алфавіту латиницею затвердженої [постановою](https://zakon.rada.gov.ua/laws/show/55-2010-%D0%BF) Кабінету Міністрів України №55 від 27 січня 2010 р.
 
@@ -69,7 +67,7 @@
 
 
 
-# **P.S. Як створити свій скрипт**
+## **P.S. Як створити свій скрипт**
 
 Також на основі цих скритіп можна створити свій, який буде міняти символи саме ті, які вам потрібні. Чи то ваш варіант транслітерації, чи якась своя ідея.
 
