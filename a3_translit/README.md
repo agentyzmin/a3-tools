@@ -19,6 +19,8 @@
 
 Обираєте текст, запускаєте скрипт. Працює з точковим текстом, текстовими фреймами, текстом на кривих.
 
+[![Скрипт для транслітерації в Adobe Illustrator](http://img.youtube.com/vi/0NphpSzBg2Q/0.jpg)](http://www.youtube.com/watch?v=0NphpSzBg2Q "Скрипт для транслітерації в Adobe Illustrator")
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/0NphpSzBg2Q" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
