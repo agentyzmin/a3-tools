@@ -21,8 +21,6 @@
 
 [![Скрипт для транслітерації в Adobe Illustrator](http://img.youtube.com/vi/0NphpSzBg2Q/0.jpg)](http://www.youtube.com/watch?v=0NphpSzBg2Q "Скрипт для транслітерації в Adobe Illustrator")
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/0NphpSzBg2Q" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 
 
 ## **Як працює у Adobe InDesign**
@@ -35,9 +33,9 @@
 - Будь-які об’єкти, всталені у текст (символі, зображення, інші фрейми), видаляться;
 - Текст на кривих сприймає не як текст, а як полігон, тому не може транлітерувати.
 
-Якщо знаєте, як вдосканалити скрипт, до напішить на [info@a3.kyiv.ua](mailto:info@a3.kyiv.ua) або зробіть коміт на гітхабі.
+Якщо знаєте, як вдосканалити скрипт, до напішить на [info@a3.kyiv.ua](mailto:info@a3.kyiv.ua) або зробіть коміт.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/8m3ksfNvGlg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Скрипт для транслітерації в Adobe InDesign](http://img.youtube.com/vi/8m3ksfNvGlg/0.jpg)](http://www.youtube.com/watch?v=8m3ksfNvGlg "Скрипт для транслітерації в Adobe InDesign")
 
 
 
