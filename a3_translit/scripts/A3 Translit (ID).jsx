@@ -11,37 +11,9 @@ app.doScript(Main, ScriptLanguage.JAVASCRIPT, undefined, UndoModes.ENTIRE_SCRIPT
 function Main() {
 
   var changeObject;
+  var selList = app.selection;
 
-  if (app.selection.length < 1) { exit(); }
-
-  for (var i = 0; i < app.selection.length; i++) {
-
-    switch (app.selection[i].constructor) {
-      case TextFrame:
-      case TextColumn:
-      case Text:
-      case Cell:
-      case Paragraph:
-      case Word:
-        changeObject = app.selection[i];
-        break;
-      case GraphicLine:
-      case Oval:
-      case Polygon:
-      case Rectangle:
-      case TextFrame:
-      case EPSText:
-      case SplineItem:
-        if (app.selection[i].textPaths.length > 0) {
-          changeObject = app.selection[i].textPaths[0];
-        }
-        break;
-      default:
-        break;
-    }
-
-    translit();
-  }
+  if (selList.length < 1) { exit(); }
 
   function myGrep(findString, changeString) {
     app.findGrepPreferences = NothingEnum.NOTHING;
@@ -50,9 +22,7 @@ function Main() {
       app.findGrepPreferences.findWhat = findString;
       app.changeGrepPreferences.changeTo = changeString;
       changeObject.changeGrep();
-    } catch (e) {
-      alert(e + ' at line ' + e.line);
-    }
+    } catch (e) {}
   }
 
   function translit() {
@@ -141,5 +111,44 @@ function Main() {
     myGrep('Я', 'Ia');
     myGrep("'", "");
     myGrep("’", "");
+  }
+
+  function switchAndTranslit(chObj) {
+    switch (chObj.constructor) {
+      case TextColumn:
+      case TextFrame:
+      case Text:
+      case Cell:
+      case Paragraph:
+      case Word:
+        changeObject = chObj;
+        break;
+      case GraphicLine:
+      case Oval:
+      case Polygon:
+      case Rectangle:
+      case EPSText:
+      case SplineItem:
+        if (chObj.textPaths.length > 0) {
+          changeObject = chObj.textPaths[0];
+        }
+        break;
+      default:
+        break;
+    }
+
+    translit();
+  }
+
+  for (var i = selList.length; i--;) {
+    if (selList[i] instanceof Group) {
+      for (var j = selList[i].allPageItems.length; j--;) {
+        changeObject = selList[i].allPageItems[j];
+        switchAndTranslit(changeObject);
+      }
+    } else {
+      changeObject = selList[i];
+      switchAndTranslit(changeObject);
+    }
   }
 }
