@@ -16,3 +16,7 @@
 .idea/**/uiDesigner.xml
 
 .dnconfig
+
+# cache/compile
+**.pyc
+**/__pycache__/
