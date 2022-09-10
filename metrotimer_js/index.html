@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Metro timer</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body>
+    <style>
+        td {
+            padding: 5px;
+        }
+    </style>
+
+    <div class="container">
+        <div class="container navbar-default navbar-brand navbar-fixed-top">
+            <select name="stationlist" id="selectStation" class="form-group">
+                <option value="Dnipro">Dnipro</option>
+            </select>
+            <label class="h5"><input type="checkbox" id="rounding_switch" checked> Заокруглення (до 5 хв.)</label>
+            <label class="h5"><input type="checkbox" id="line_switch" checked> Номери ліній</label>
+            <label class="h5"><input type="checkbox" id="map_switch" checked> Квадрат на мапі</label>
+        </div>
+        <div class="row" style="padding-top: 50px">
+            <div class="col-sm-6">
+                <button onclick="copyTextToClipboard(raw_text_ua)">Копіювати</button>
+            </div>
+            <div class="col-sm-6">
+                <button onclick="copyTextToClipboard(raw_text_en)">Copy</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="result_ua" class="col-sm-6"></div>
+            <div id="result_en" class="col-sm-6"></div>
+        </div>
+
+    </div>
+    <script>
+        var station_map_square = {
+            'Академмістечко': 'A1',
+            'Арсенальна': 'C2',
+            'Берестейська': 'A2',
+            'Бориспільська': 'C3',
+            'Васильківська': 'B3',
+            'Видубичі': 'B3',
+            'Вирлиця': 'C3',
+            'Виставковий центр': 'B3',
+            'Вокзальна': 'B2',
+            'Героїв Дніпра': 'B1',
+            'Гідропарк': 'C2',
+            'Голосіївська': 'B3',
+            'Дарниця': 'C2',
+            'Деміївська': 'B3',
+            'Дніпро': 'C2',
+            'Дорогожичі': 'B1',
+            'Дружби народів': 'B3',
+            'Житомирська': 'A1',
+            'Золоті ворота': 'B2',
+            'Іподром': 'A3',
+            'Кловська': 'B2',
+            'Контрактова площа': 'B2',
+            'Либідська': 'B3',
+            'Лівобережна': 'C2',
+            'Лісова': 'C2',
+            'Лук\'янівська': 'B2',
+            'Майдан Незалежності': 'B2',
+            'Мінська': 'B1',
+            'Нивки': 'A1',
+            'Оболонь': 'B1',
+            'Олімпійська': 'B2',
+            'Осокорки': 'C3',
+            'Палац «Україна»': 'B3',
+            'Палац спорту': 'B2',
+            'Петрівка': 'B1',
+            'Печерська': 'B3',
+            'Площа Льва Толстого': 'B2',
+            'Позняки': 'C3',
+            'Політехнічний інститут': 'A2',
+            'Поштова площа': 'B2',
+            'Святошин': 'A1',
+            'Сирець': 'B1',
+            'Славутич': 'B3',
+            'Тараса Шевченка': 'B1',
+            'Театральна': 'B2',
+            'Теремки': 'A3',
+            'Університет': 'B2',
+            'Харківська': 'C3',
+            'Хрещатик': 'B2',
+            'Червоний хутір': 'C3',
+            'Чернігівська': 'C2',
+            'Шулявська': 'A2'
+        };
+
+        const station_name_ua = {
+            'Akademmistechko': "Академмістечко", 'Arsenalna': 'Арсенальна', 'Beresteiska': 'Берестейська',
+            'Boryspilska': 'Бориспільська', 'Chernihivska': 'Чернігівська', 'Chervonyi Khutir': 'Червоний хутір',
+            'Darnytsia': 'Дарниця', 'Demiivska': 'Деміївська', 'Dnipro': 'Дніпро', 'Dorohozhychi': 'Дорогожичі',
+            'Druzhby Narodiv': 'Дружби народів', 'Heroiv Dnipra': 'Героїв Дніпра', 'Hidropark': 'Гідропарк',
+            'Holosiivska': 'Голосіївська', 'Ipodrom': 'Іподром', 'Kharkivska': 'Харківська', 'Khreschatyk': 'Хрещатик',
+            'Klovska': 'Кловська', 'Kontraktova Ploscha': 'Контрактова площа', 'Lisova': 'Лісова',
+            'Livoberezhna': 'Лівобережна', 'Lukianivska': 'Лук\'янівська', 'Lybidska': 'Либідська',
+            'Maidan Nezalezhnosti': 'Майдан Незалежності', 'Minska': 'Мінська', 'Nyvky': 'Нивки', 'Obolon': 'Оболонь',
+            'Olimpiiska': 'Олімпійська', 'Osokorky': 'Осокорки', 'Palats Sportu': 'Палац спорту',
+            'Palats Ukraina': 'Палац «Україна»', 'Pecherska': 'Печерська', 'Petrivka': 'Петрівка',
+            'Ploscha Lva Tolstoho': 'Площа Льва Толстого', 'Politekhnichnyi Instytut': 'Політехнічний інститут',
+            'Poshtova Ploscha': 'Поштова площа', 'Pozniaky': 'Позняки', 'Shuliavska': 'Шулявська',
+            'Slavutych': 'Славутич', 'Sviatoshyn': 'Святошин', 'Syrets': 'Сирець',
+            'Tarasa Shevchenka': 'Тараса Шевченка', 'Teatralna': 'Театральна', 'Teremky': 'Теремки',
+            'Universytet': 'Університет', 'Vasylkivska': 'Васильківська', 'Vokzalna': 'Вокзальна',
+            'Vydubychi': 'Видубичі', 'Vyrlytsia': 'Вирлиця', 'Vystavkovyi Tsentr': 'Виставковий центр',
+            'Zhytomyrska': 'Житомирська', 'Zoloti vorota': 'Золоті ворота'
+        };
+
+        const red_line_raw = `   
+     station,Akademmistechko,Zhytomyrska,Sviatoshyn,Nyvky,Beresteiska,Shuliavska,Politekhnichnyi Instytut,Vokzalna,Universytet,Teatralna,Khreschatyk,Arsenalna,Dnipro,Hidropark,Livoberezhna,Darnytsia,Chernihivska,Lisova
+    Akademmistechko,0.0,2.05,4.55,6.40,8.25,11.40,13.35,16.40,18.40,20.20,22.15,24.50,26.40,29.10,31.50,33.50,36.15,38.30
+    Zhytomyrska,2.30,0.0,2.30,4.15,6.00,9.15,11.10,14.15,16.15,17.55,19.50,22.25,24.15,26.45,29.25,31.25,33.50,36.05
+    Sviatoshyn,5.35,2.45,0.0,1.25,3.10,6.25,8.20,11.25,13.25,15.05,17.00,19.35,21.25,23.55,26.35,28.35,31.00,33.15
+    Nyvky,7.25,4.35,1.30,0.0,1.25,4.40,6.35,9.40,11.40,13.20,15.15,17.50,19.40,22.10,24.50,26.50,29.15,31.30
+    Beresteiska,9.15,6.25,3.20,1.30,0.0,2.55,4.50,7.55,9.55,11.35,13.30,16.05,17.55,20.25,23.05,25.05,27.30,29.45
+    Shuliavska,12.10,9.20,6.15,4.25,2.35,0.0,1.35,4.40,6.40,8.20,10.15,12.50,14.40,17.10,19.50,21.50,24.15,26.30
+    Politekhnichnyi Instytut,14.05,11.15,8.10,6.20,4.30,1.35,0.0,2.45,4.45,6.25,8.20,10.50,12.45,15.15,17.55,20.55,22.20,24.35
+    Vokzalna,17.05,14.15,11.10,9.20,7.30,4.35,2.40,0.0,1.35,3.15,5.10,7.45,9.35,12.05,14.45,16.45,19.10,21.25
+    Universytet,19.00,16.10,13.05,11.15,9.25,6.30,4.35,1.35,0.0,1.20,3.15,5.50,7.40,10.10,12.50,14.50,17.15,19.30
+    Teatralna,20.45,17.55,14.50,13.00,11.10,8.20,6.20,3.20,1.25,0.0,1.30,4.05,5.55,8.25,11.05,13.05,15.30,17.45
+    Khreschatyk,22.30,19.40,16.35,14.45,12.55,10.00,8.05,5.05,3.10,1.20,0.0,2.10,4.00,6.30,9.10,11.10,13.35,15.50
+    Arsenalna,25.20,22.30,19.25,17.35,15.45,12.50,10.45,7.55,6.00,4.10,2.25,0.0,1.30,4.00,6.40,8.40,11.05,13.20
+    Dnipro,27.10,24.20,21.15,19.25,17.35,14.40,12.45,9.45,7.50,6.00,4.15,1.30,0.0,2.10,4.50,6.50,9.15,11.30
+    Hidropark,29.25,26.35,23.30,21.40,19.50,16.55,15.00,12.00,10.05,8.15,6.30,3.45,1.55,0.0,2.20,4.20,6.45,9.00
+    Livoberezhna,32.00,29.10,26.05,24.15,22.25,19.30,17.35,14.35,12.40,10.50,9.05,6.20,4.30,2.15,0.0,1.40,4.05,6.20
+    Darnytsia,34.00,31.10,28.05,26.15,24.25,21.30,19.35,16.35,14.40,12.50,11.05,8.20,6.30,4.15,1.40,0.0,2.05,4.20
+    Chernihivska,36.25,33.35,30.30,28.40,26.50,23.55,22.00,19.00,17.05,15.15,13.30,10.45,8.55,6.40,4.05,2.05,0.0,1.55
+    Lisova,38.30,35.40,32.35,30.45,28.55,26.00,24.05,21.05,19.10,17.20,15.35,12.50,11.00,8.45,6.10,4.10,1.45,0.0
+    `;
+        const blue_line_raw = `
+    station,Teremky,Ipodrom,Vystavkovyi Tsentr,Vasylkivska,Holosiivska,Demiivska,Lybidska,Palats Ukraina,Olimpiiska,Ploscha Lva Tolstoho,Maidan Nezalezhnosti,Poshtova Ploscha,Kontraktova Ploscha,Tarasa Shevchenka,Petrivka,Obolon,Minska,Heroiv Dnipra
+    Teremky,0.0,2.10,3.45,7.00,9.10,10.55,12.50,14.20,16.10,17.55,19.55,22.00,23.35,26.00,28.40,31.10,33.05,35.15
+    Ipodrom,2.10,0.0,1.20,4.35,6.45,8.30,10.25,11.55,13.45,15.30,17.30,19.35,21.10,23.35,26.15,28.45,30.40,32.50
+    Vystavkovyi Tsentr,3.45,1.20,0.0,3.00,5.10,6.55,8.50,10.20,12.10,13.55,15.55,18.00,19.35,22.00,24.40,27.10,29.05,31.15
+    Vasylkivska,7.00,4.35,3.00,0.0,1.55,3.40,5.35,7.05,8.55,10.40,12.40,14.45,16.20,18.45,21.25,23.55,25.50,28.00
+    Holosiivska,9.20,6.55,5.20,2.05,0.0,1.25,3.20,4.50,6.40,8.25,10.25,12.30,14.05,16.30,19.10,21.40,23.35,25.45
+    Demiivska,11.05,8.40,7.05,3.50,1.25,0.0,1.35,3.05,4.55,6.40,8.40,10.45,12.20,14.45,17.25,19.55,21.50,24.00
+    Lybidska,12.55,10.30,8.55,5.40,3.15,1.30,0.0,1.10,2.45,4.30,6.45,8.50,10.25,12.50,15.30,18.00,19.55,22.05
+    Palats Ukraina,14.30,12.05,10.30,7.15,4.50,3.05,1.15,0.0,1.30,3.15,5.15,7.20,8.55,11.20,14.00,16.30,18.25,20.35
+    Olimpiiska,16.20,13.55,12.20,9.05,6.40,4.55,3.05,1.30,0.0,1.25,3.25,5.30,7.05,9.30,12.10,14.40,16.35,18.45
+    Ploscha Lva Tolstoho,18.05,15.40,14.05,10.50,8.25,6.40,4.50,3.15,1.25,0.0,1.35,3.40,5.15,7.40,10.20,12.50,14.45,16.55
+    Maidan Nezalezhnosti,20.05,17.40,16.05,12.50,10.25,8.40,6.50,5.15,3.25,1.35,0.0,1.35,3.10,5.35,8.15,10.45,12.40,14.50
+    Poshtova Ploscha,22.10,19.45,18.10,14.55,12.30,10.45,8.55,7.20,5.30,3.40,1.35,0.0,1.20,3.45,6.25,8.55,10.50,13.00
+    Kontraktova Ploscha,23.45,21.20,19.45,16.30,14.05,12.20,10.30,8.55,7.05,5.15,3.10,1.20,0.0,2.00,4.40,7.10,9.05,11.15
+    Tarasa Shevchenka,26.00,23.35,22.00,18.45,16.20,14.35,12.45,11.10,9.20,7.30,5.25,3.35,1.50,0.0,2.25,4.55,6.50,9.00
+    Petrivka,28.40,26.15,24.40,21.25,19.00,17.15,15.25,13.45,12.00,10.10,8.05,6.15,4.30,2.25,0.0,2.05,4.00,6.05
+    Obolon,31.15,28.50,27.15,24.00,21.35,19.50,18.00,16.25,14.35,12.45,10.40,8.50,7.05,5.00,2.10,0.0,1.35,3.45
+    Minska,33.05,30.40,29.05,25.50,23.25,21.40,19.50,18.15,16.25,14.35,12.30,10.40,8.55,6.50,4.00,1.30,0.0,1.50
+    Heroiv Dnipra,35.15,32.50,31.15,28.00,25.35,23.50,22.00,20.25,18.35,16.45,14.40,12.50,11.05,9.00,6.10,3.40,1.50,0.0
+    `;
+        const green_line_raw = `
+    station,Syrets,Dorohozhychi,Lukianivska,Zoloti vorota,Palats Sportu,Klovska,Pecherska,Druzhby Narodiv,Vydubychi,Slavutych,Osokorky,Pozniaky,Kharkivska,Vyrlytsia,Boryspilska,Chervonyi Khutir
+    Syrets,0.0,2.00,5.20,9.10,11.00,13.15,15.30,17.35,20.25,26.45,28.25,31.25,34.30,36.40,38.40,41.00
+    Dorohozhychi,2.00,0.0,3.00,6.50,8.40,10.55,13.10,15.15,18.05,24.25,26.05,29.05,32.10,34.20,36.20,38.40
+    Lukianivska,5.20,3.00,0.0,3.25,5.15,7.30,9.45,11.50,14.40,21.00,22.40,25.40,28.45,30.55,32.55,35.15
+    Zoloti vorota,9.05,6.45,3.20,0.0,1.20,3.35,5.50,7.55,10.45,17.05,18.45,21.45,24.50,27.00,29.00,31.20
+    Palats Sportu,10.55,8.35,5.10,1.20,0.0,1.45,4.00,6.05,8.55,15.15,16.55,19.55,23.00,25.10,27.10,29.30
+    Klovska,13.10,10.50,7.25,3.35,1.45,0.0,1.55,4.00,6.55,13.10,14.50,17.50,20.55,23.05,25.05,27.25
+    Pecherska,15.25,13.05,9.40,5.50,4.00,1.50,0.0,1.40,4.30,10.50,12.30,15.30,18.35,20.45,22.45,25.05
+    Druzhby Narodiv,17.25,15.05,11.40,7.50,6.00,3.50,1.35,0.0,2.25,8.45,10.25,13.25,16.30,18.40,20.40,23.00
+    Vydubychi,20.10,17.50,14.25,10.35,8.45,6.35,4.20,2.20,0.0,6.00,7.40,10.40,13.45,15.55,17.55,20.15
+    Slavutych,26.35,24.15,20.50,17.00,15.10,13.00,10.45,8.45,6.00,0.0,1.25,4.25,7.30,9.40,11.40,14.00
+    Osokorky,28.10,25.50,22.25,18.35,16.45,14.35,12.20,10.20,7.35,1.20,0.0,2.40,5.45,7.55,9.55,12.15
+    Pozniaky,31.00,28.40,25.15,21.25,19.35,17.25,15.10,13.10,10.25,4.10,2.30,0.0,2.40,4.50,6.50,9.10
+    Kharkivska,33.55,31.25,28.10,24.20,22.30,20.20,18.05,16.05,13.20,7.05,5.25,2.30,0.0,1.45,3.45,6.05
+    Vyrlytsia,36.00,33.40,30.15,26.25,24.35,22.25,20.10,18.10,15.25,9.10,7.30,4.35,1.40,0.0,1.45,4.05
+    Boryspilska,38.00,35.40,32.15,28.25,26.35,24.25,22.10,20.10,17.25,11.10,9.30,6.35,3.40,1.45,0.0,2.00
+    Chervonyi Khutir,40.30,38.10,34.45,30.55,29.05,26.55,24.40,22.40,19.55,13.40,12.00,9.05,6.10,4.15,2.10,0.0
+    `;
+
+        function convert_csv(csv) {
+            let lines = csv.split('\n');
+            // filter out only whitespace lines
+            lines = lines.filter(line => line.trim().length > 0);
+            let result = {};
+            let headers = lines[0].trim().split(',');
+            for (let i = 1; i < lines.length; i++) {
+                const row = lines[i];
+                const columns = row.trim().split(',');
+                // convert to object with headers as keys
+                let obj = {};
+                for (let j = 1; j < headers.length; j++) {
+                    // convert mm.ss to seconds
+                    const time = columns[j].split('.');
+                    const seconds = parseInt(time[0]) * 60 + parseInt(time[1]);
+                    obj[headers[j]] = seconds;
+                }
+                result[columns[0]] = obj;
+            }
+            return result;
+        }
+        const red_line_station_time = convert_csv(red_line_raw);
+        const green_line_station_time = convert_csv(green_line_raw);
+        const blue_line_station_time = convert_csv(blue_line_raw);
+        // merge line objects
+        const station_time = Object.assign({}, red_line_station_time, green_line_station_time, blue_line_station_time);
+        const station_line = {};
+
+        for (let station in red_line_station_time) {
+            station_line[station] = 'M1';
+        }
+        for (let station in blue_line_station_time) {
+            station_line[station] = 'M2';
+        }
+        for (let station in green_line_station_time) {
+            station_line[station] = 'M3';
+        }
+        console.log(station_time);
+
+        const CONNECTION_TIME = 180;
+
+        const connection_stations = {
+            'Teatralna': 'Zoloti vorota',
+            'Khreschatyk': 'Maidan Nezalezhnosti',
+            'Zoloti vorota': 'Teatralna',
+            'Palats Sportu': 'Ploscha Lva Tolstoho',
+            'Maidan Nezalezhnosti': 'Khreschatyk',
+            'Ploscha Lva Tolstoho': 'Palats Sportu',
+        };
+
+        // fill selectstation options with stations
+        var selectDOM = document.getElementById('selectStation');
+        // clear current options
+        selectDOM.innerHTML = '';
+        const station_list = Object.keys(station_time).sort();
+        for (let station of station_list) {
+            const option = document.createElement('option');
+            option.value = station;
+            option.innerHTML = station;
+            selectDOM.appendChild(option);
+        }
+
+        function get_fastest_time_between_stations_with_connection(station1, station2) {
+            let fastest_time = Number.MAX_SAFE_INTEGER;
+            let fastest_path = [];
+            // check if there is a direct connection
+            if (station_time[station1] && station_time[station1][station2] !== undefined) {
+                fastest_time = station_time[station1][station2];
+                fastest_path = [station1, station2];
+            }
+            // check if there is a connection through another station
+            for (let connection_station in connection_stations) {
+                let connection_station2 = connection_stations[connection_station];
+                if (station_time[station1][connection_station] !== undefined && station_time[connection_station2][station2] !== undefined) {
+                    const time = station_time[station1][connection_station] + CONNECTION_TIME + station_time[connection_station2][station2];
+                    if (time < fastest_time) {
+                        fastest_time = time;
+                        fastest_path = [station1, connection_station, connection_station2, station2];
+                    }
+                }
+            }
+
+            return {
+                time: fastest_time,
+                path: fastest_path
+            };
+        }
+
+        var rounding_switchDOM = document.getElementById('rounding_switch');
+        var line_switchDOM = document.getElementById('line_switch');
+        var map_switchDOM = document.getElementById('map_switch');
+        var raw_text_ua = '';
+        var raw_text_en = '';
+
+        function render_response(response) {
+            var result_ua_DOM = document.getElementById('result_ua');
+            var result_en_DOM = document.getElementById('result_en');
+            result_ua_DOM.innerHTML = '';
+            result_en_DOM.innerHTML = '';
+            var show_lines = line_switchDOM.checked;
+            var show_map = map_switchDOM.checked;
+
+            raw_text_ua = '';
+            raw_text_en = '';
+
+            for (var key in response['times_ua']) {
+                var stationDOM = document.createElement('tr');
+                var time = response['times_ua'][key][1]['time'];
+                if (rounding_switchDOM.checked) {
+                    time = time.split('.')[0]
+                }
+                stationDOM.innerHTML += ((show_lines) ? '<td>(' + response['times_ua'][key][1]['line'] + ')</td>' : ' ')
+                raw_text_ua += ((show_lines) ? '(' + response['times_ua'][key][1]['line'] + ')\t' : '');
+                stationDOM.innerHTML += '<td>' + response['times_ua'][key][0] + ((show_map) ? '&nbsp&nbsp' + response['times_ua'][key][1]['map_square'] : '') + '</td>'
+                raw_text_ua += response['times_ua'][key][0] + ((show_map) ? '  ' + response['times_ua'][key][1]['map_square'] : '') + '\t';
+                if (time === "0" || time === '0.00') {
+                    stationDOM.innerHTML += '<td>Ви тут</td>'
+                    raw_text_ua += 'Ви тут\n'
+                }
+                else {
+                    stationDOM.innerHTML += '<td>' + time + ' хв</td>';
+                    raw_text_ua += time + ' хв\n';
+                }
+                result_ua_DOM.appendChild(stationDOM);
+            }
+
+            for (var key in response['times_en']) {
+                var stationDOM = document.createElement('tr');
+                var time = response['times_en'][key][1]['time'];
+                if (rounding_switchDOM.checked) {
+                    time = time.split('.')[0]
+                }
+                stationDOM.innerHTML += ((show_lines) ? '<td>(' + response['times_en'][key][1]['line'] + ')</td>' : ' ')
+                raw_text_en += ((show_lines) ? '(' + response['times_en'][key][1]['line'] + ')\t' : '')
+                stationDOM.innerHTML += '<td>' + response['times_en'][key][0] + ((show_map) ? ('&nbsp&nbsp' + response['times_en'][key][1]['map_square']) : '') + '</td>'
+                raw_text_en += response['times_en'][key][0] + ((show_map) ? ('  ' + response['times_en'][key][1]['map_square']) : '') + '\t';
+                if (time === "0" || time === '0.00') {
+                    stationDOM.innerHTML += '<td>You\'re here</td>'
+                    raw_text_en += 'You\'re here\n'
+                }
+                else {
+                    stationDOM.innerHTML += '<td>' + time + ' min</td>';
+                    raw_text_en += time + ' min\n';
+                }
+                result_en_DOM.appendChild(stationDOM);
+            }
+        }
+
+        function load_times() {
+
+            var selectedStation = selectDOM.options[selectDOM.selectedIndex].value;
+            var rounding = false;
+            if (rounding_switchDOM.checked) rounding = true;
+
+            // compute times for every station
+            var times_ua = {};
+            var times_en = {};
+            for (var station in station_time) {
+                if (station_time.hasOwnProperty(station)) {
+                    var time = get_fastest_time_between_stations_with_connection(selectedStation, station)['time'];
+                    // if rounding is enabled, round the time to 300 seconds
+                    if (rounding) {
+                        time = Math.ceil(time / 300) * 300;
+                    }
+                    // split time into minutes and seconds, format as mm.ss
+                    var minutes = Math.floor(time / 60);
+                    var seconds = time % 60;
+                    if (seconds < 10) seconds = '0' + seconds;
+                    time = minutes + '.' + seconds;
+
+                    times_ua[station_name_ua[station]] = { 'station': station_name_ua[station], 'time': time, 'line': station_line[station], 'map_square': station_map_square[station_name_ua[station]] };
+                    times_en[station] = { 'station': station, 'time': time, 'line': station_line[station], 'map_square': station_map_square[station_name_ua[station]] };
+                }
+                // convert times_ua and times_en to array sorted by key
+                var times_ua_array = [];
+                var times_en_array = [];
+                for (var key in times_ua) {
+                    if (times_ua.hasOwnProperty(key)) {
+                        times_ua_array.push([key, times_ua[key]]);
+                    }
+                }
+                for (var key in times_en) {
+                    if (times_en.hasOwnProperty(key)) {
+                        times_en_array.push([key, times_en[key]]);
+                    }
+                }
+                times_ua_array = times_ua_array.sort(function (a, b) {
+                    return a[0].localeCompare(b[0]);
+                });
+                times_en_array = times_en_array.sort(function (a, b) {
+                    return a[0].localeCompare(b[0]);
+                });
+
+            }
+
+            render_response({
+                'times_ua': times_ua_array,
+                'times_en': times_en_array
+            });
+        }
+
+        selectDOM.onchange = load_times;
+        rounding_switchDOM.onchange = load_times;
+        line_switchDOM.onchange = load_times;
+        map_switchDOM.onchange = load_times;
+
+        load_times();
+
+        function copyTextToClipboard(text) {
+            var textArea = document.createElement("textarea");
+
+            //
+            // *** This styling is an extra step which is likely not required. ***
+            //
+            // Why is it here? To ensure:
+            // 1. the element is able to have focus and selection.
+            // 2. if element was to flash render it has minimal visual impact.
+            // 3. less flakyness with selection and copying which **might** occur if
+            //    the textarea element is not visible.
+            //
+            // The likelihood is the element won't even render, not even a flash,
+            // so some of these are just precautions. However in IE the element
+            // is visible whilst the popup box asking the user for permission for
+            // the web page to copy to the clipboard.
+            //
+
+            // Place in top-left corner of screen regardless of scroll position.
+            textArea.style.position = 'fixed';
+            textArea.style.top = 0;
+            textArea.style.left = 0;
+
+            // Ensure it has a small width and height. Setting to 1px / 1em
+            // doesn't work as this gives a negative w/h on some browsers.
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+
+            // We don't need padding, reducing the size if it does flash render.
+            textArea.style.padding = 0;
+
+            // Clean up any borders.
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+
+            // Avoid flash of white box if rendered for any reason.
+            textArea.style.background = 'transparent';
+
+
+            textArea.value = text;
+
+            document.body.appendChild(textArea);
+
+            textArea.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Copying text command was ' + msg);
+            } catch (err) {
+                console.log('Oops, unable to copy');
+            }
+
+            document.body.removeChild(textArea);
+        }
+    </script>
+
+</body>
+
+</html>
