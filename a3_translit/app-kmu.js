@@ -1,3 +1,5 @@
+// Транлітерація згідно постанови КМУ №55 від 27.01.2010 
+
 jQuery(function ($) {
     var $res = $('#resultText'),
         $src = $('#sourceText');
